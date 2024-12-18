@@ -48,7 +48,7 @@ def userinput(rqst: RequestQueryBedrock, user_query: str):
 
     details="It is important that the SQL query complies with Athena syntax. During join if column name are same please use alias ex llm.customer_id in select statement. It is also important to respect the type of columns: if a column is string, the value should be enclosed in quotes. If you are writing CTEs then include all the required columns. While concatenating a non string column, make sure cast the column to string. For date columns comparing to string , please cast the string input. Alwayws use the database name along with the table name"
     final_question = "\n\nHuman:"+details + vector_search_match + user_query+ "n\nAssistant:"
-    print("FINAL QUESTION :::" + final_question)
+    logger.info("FINAL QUESTION :::" + final_question)
     answer = rqst.generate_sql(final_question)
     return answer
 

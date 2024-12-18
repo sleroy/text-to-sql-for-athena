@@ -1,6 +1,8 @@
-## A robust Text-to-SQL solution for Amazon Athena
+## Streamlit Applet using Bedrock for robust Text-to-SQL solution and Amazon Athena
 
 This is the repo that is based on the AWS AI/ML Blog Post: https://aws.amazon.com/blogs/machine-learning/build-a-robust-text-to-sql-solution-generating-complex-queries-self-correcting-and-querying-diverse-data-sources/
+
+The purpose is to offer a simple UI to generate SQL Queries for Amazon Athena based on your AWS Glue Databases and tables metadata.
 
 The main differences are : 
 
