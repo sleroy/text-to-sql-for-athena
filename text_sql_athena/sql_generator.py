@@ -21,7 +21,7 @@ class RequestQueryBedrock:
         return self.embedding_generator.format_metadata(documents)
 
         
-    def generate_sql(self,prompt, max_attempt=4) ->str:
+    def generate_sql(self,prompt, message_container, max_attempt=4) ->str:
             """
             Generate and Validate SQL query.
 
@@ -37,6 +37,7 @@ class RequestQueryBedrock:
             prompts = [prompt]  
             sql_query = ""
             while attempt < max_attempt:
+                message_container.text(f"Generating SQL (Attempt {attempt + 1}/{max_attempt})...") # Display attempt message
                 logger.info(f'Sql Generation attempt Count: {attempt+1}')
                 try:
                     logger.info(f'we are in Try block to generate the sql and count is :{attempt+1}')
@@ -68,4 +69,9 @@ class RequestQueryBedrock:
                     logger.error(f'FAILED -> Sql Generation attempt Count: {attempt+1} {e}')
                     error_messages.append(msg)
                     attempt += 1
+                    
+            # Display a final message if all attempts fail
+            if attempt == max_attempt:
+                message_container.error("Failed to generate valid SQL after multiple attempts.")
+                    
             return sql_query
