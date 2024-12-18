@@ -89,7 +89,16 @@ database_selection = st.selectbox(
 
 # Launch import
 if st.button("Import metadata from Glue database"):
-    if glueSchema.load_embedding_from_glue_data_tables(database_selection):
+    progress_bar = st.progress(0)  # Initialize progress bar
+    
+    def progress_callback(progress):
+        progress_bar.progress(progress)
+
+
+    def load_with_progress(glueSchema, database_selection):
+        glueSchema.load_embedding_from_glue_data_tables(database_selection, progress_callback)    
+        
+    if load_with_progress(glueSchema, database_selection):
         st.write("Data imported")
 else:
     pass

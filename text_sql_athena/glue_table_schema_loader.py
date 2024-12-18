@@ -1,13 +1,8 @@
-import json
-import sys
-import traceback
-import logging
 import uuid
 
 from text_sql_athena.aws_client_factory import AwsClientFactory
 from .custom_logger import logger
 from .chromadb_vc_embedding import EmbeddingBedrockChroma
-from .llm_basemodel import ChatBedrock
 from .llm_basemodel import LanguageModel
 
 
@@ -35,26 +30,35 @@ class GlueTableSchemaLoader:
         self.llm = language_model.llm
                 
 
-    def load_embedding_from_glue_data_tables(self, database_name):
+    def load_embedding_from_glue_data_tables(self, database_name: str, progress_callback=None):
         """Loads embeddings from Glue data tables into the Chroma collection."""
+        
         # Get description from database      # Get description from database
         response = self.glue_client.get_database(Name=database_name)
         database_description = ""
         if 'Parameters' in response['Database'] and 'description' in response['Database']['Parameters']:
             database_description = response['Database']['Parameters']['description']
-    
-        
-        response = self.glue_client.get_tables(DatabaseName=database_name)
 
-        for table in response['TableList']:
-            self.load_glue_table(table, database_description)  # Use helper method (shown below)
-        
-        while 'NextToken' in response:  # Handle pagination
+        #Fetch all the tables and handle the pagination
+        all_tables = []
+        response = self.glue_client.get_tables(DatabaseName=database_name)
+        all_tables.extend(response['TableList'])
+
+        while 'NextToken' in response:
             response = self.glue_client.get_tables(
                 DatabaseName=database_name, NextToken=response['NextToken']
             )
-            for table in response['TableList']:
-                self.load_glue_table(table, database_description)
+            all_tables.extend(response['TableList'])
+
+        total_tables = len(all_tables)
+        processed_tables = 0
+        # Import the table in the vector database
+        for table in all_tables:
+            self.load_glue_table(table, database_description)
+            processed_tables += 1
+            if progress_callback:
+                progress_callback(processed_tables / total_tables)
+
 
     def load_glue_table(self, table, database_description):
         """Helper method to load a single Glue table's schema."""

@@ -41,11 +41,11 @@ class RequestQueryBedrock:
                 try:
                     logger.info(f'we are in Try block to generate the sql and count is :{attempt+1}')
                     generated_sql = self.llm.predict(prompt)
-                    print(f"Generated sql : {generated_sql}")
+                    logger.info(f"Generated sql : {generated_sql}")
                     query_str = generated_sql.split("```")[1]
                     query_str = " ".join(query_str.split("\n")).strip()                    
                     sql_query = query_str[3:] if query_str.startswith("sql") else query_str
-                    print(sql_query)
+                    logger.info(sql_query)
                     # return sql_query
                     syntaxcheckmsg=self.sqlsyntax_checker.syntax_checker(sql_query)
                     if syntaxcheckmsg=='Passed':
@@ -63,7 +63,7 @@ class RequestQueryBedrock:
                         prompts.append(prompt)
                         attempt += 1
                 except Exception as e:
-                    print(e)
+                    logger.info(e)
                     msg = str(e)                    
                     logger.error(f'FAILED -> Sql Generation attempt Count: {attempt+1} {e}')
                     error_messages.append(msg)
