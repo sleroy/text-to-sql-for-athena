@@ -34,7 +34,7 @@ This post will address those challenges. First, we will include the meta-data of
   - Amazon Athena StartQueryExecution, GetQueryExecution, GetQueryResults
   - S3 read/write access to Athena query results 
 
-```markdown
+
 ## Installation
 
 1. Clone the repository:
@@ -55,7 +55,9 @@ pip install -r requirements.txt
  streamlit run applet.py 
 
 ```
+
 ### Solution Architecture
+
 <img width="434" alt="image" src="https://github.com/aws-samples/text-to-sql-for-athena/assets/84034588/0c523340-0d7d-4da0-a409-1583a04184fe">
 
 #### Process Walkthrough
