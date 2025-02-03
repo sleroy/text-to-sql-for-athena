@@ -13,7 +13,7 @@ The main differences are :
 
 ![Streamlit applet screenshot](screenshot.png)
 
-### 1)	Introduction
+### Introduction
 
 Structured Query Language (SQL) is a complex language that needs both understanding of database, metadata and SQL language. Today, Generative AI can enable people without SQL knowledge. This task is called, Text-to-SQL, generating SQL queries from natural language processing (NLP) and converting text into a semantically correct SQL. The presented solution in this post aims to bring enterprise analytics operations to the next level by shortening the path to your data using natural language. 
 
@@ -21,7 +21,40 @@ However, the task of Text-to-SQL presents various challenges. At its core, the d
 
 This post will address those challenges. First, we will include the meta-data of the data sources to increase the reliability of the generated SQL query. Secondly, we will use a final loop for evaluation and correction of SQL queries to correct the SQL query, if it is applicable. Here, we will utilize the error messages received from Amazon Athena which will make the correction prompting more coincide. Amazon Athena also allows us to utilize Athena’s supported endpoints and connectors to cover a large set of data sources. After we build the solution, we will test the Text-to-SQL capability at different realistic scenarios with varying SQL complexity levels. Finally, we will explain how a different data-source can be easily incorporated using our solution. Along with these results, you can observe our solutions architecture, workflow and the code-base snippets for you to implement this solution for your business.
 
+### AWS Requirements
 
+* Amazon Bedrock access with:
+  - Anthropic Claude 3.5 Sonnet model enabled
+  - Amazon Titan Embeddings model enabled
+* AWS Glue Database and Tables
+* Amazon Athena configured with a query results location in S3
+* IAM permissions for:
+  - Amazon Bedrock invoke-model
+  - AWS Glue GetDatabases, GetTables, GetTable
+  - Amazon Athena StartQueryExecution, GetQueryExecution, GetQueryResults
+  - S3 read/write access to Athena query results 
+
+```markdown
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/aws-samples/text-to-sql-for-athena.git
+cd text-to-sql-for-athena
+
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# OR
+.venv\Scripts\activate     # Windowsivate  # Linux/Mac
+# OR
+.venv\Scripts\activate     # Windowsa.git
+
+pip install -r requirements.txt
+
+ streamlit run applet.py 
+
+```
 ### Solution Architecture
 <img width="434" alt="image" src="https://github.com/aws-samples/text-to-sql-for-athena/assets/84034588/0c523340-0d7d-4da0-a409-1583a04184fe">
 
