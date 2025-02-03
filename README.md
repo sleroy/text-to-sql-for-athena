@@ -83,6 +83,12 @@ pip install -r requirements.txt
 ## Using the repo
 Please start with [Streamlit Applet](applet.py)
 
+You can now view your Streamlit app in your browser.
+
+* Local URL: http://localhost:8501
+* Network URL: http://10.0.20.205:8501
+
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
